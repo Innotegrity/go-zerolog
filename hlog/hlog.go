@@ -7,9 +7,9 @@ import (
 	"time"
 
 	"github.com/rs/xid"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/hlog/internal/mutil"
-	"github.com/rs/zerolog/log"
+	"go.innotegrity.dev/zerolog"
+	"go.innotegrity.dev/zerolog/hlog/internal/mutil"
+	"go.innotegrity.dev/zerolog/log"
 )
 
 // FromRequest gets the logger in the request's context.

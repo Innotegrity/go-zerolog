@@ -15,8 +15,8 @@ import (
 	"testing"
 
 	"github.com/rs/xid"
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/internal/cbor"
+	"go.innotegrity.dev/zerolog"
+	"go.innotegrity.dev/zerolog/internal/cbor"
 )
 
 func decodeIfBinary(out *bytes.Buffer) string {

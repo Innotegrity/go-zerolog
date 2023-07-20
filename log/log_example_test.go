@@ -1,3 +1,4 @@
+//go:build !binary_log
 // +build !binary_log
 
 package log_test
@@ -8,8 +9,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/log"
+	"go.innotegrity.dev/zerolog"
+	"go.innotegrity.dev/zerolog/log"
 )
 
 // setup would normally be an init() function, however, there seems

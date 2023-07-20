@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/rs/zerolog"
+	"go.innotegrity.dev/zerolog"
 )
 
 func isInputFromPipe() bool {

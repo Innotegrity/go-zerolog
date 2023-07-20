@@ -1,3 +1,4 @@
+//go:build !binary_log
 // +build !binary_log
 
 package hlog_test
@@ -9,8 +10,8 @@ import (
 
 	"net/http/httptest"
 
-	"github.com/rs/zerolog"
-	"github.com/rs/zerolog/hlog"
+	"go.innotegrity.dev/zerolog"
+	"go.innotegrity.dev/zerolog/hlog"
 )
 
 // fake alice to avoid dep

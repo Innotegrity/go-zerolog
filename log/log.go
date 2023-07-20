@@ -5,13 +5,18 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"os"
 
-	"github.com/rs/zerolog"
+	"go.innotegrity.dev/zerolog"
 )
 
+/** BEGIN CUSTOM CODE */
+
+/*
 // Logger is the global logger.
 var Logger = zerolog.New(os.Stderr).With().Timestamp().Logger()
+*/
+
+/** END CUSTOM CODE */
 
 // Output duplicates the global logger and sets w as its output.
 func Output(w io.Writer) zerolog.Logger {
@@ -129,3 +134,54 @@ func Printf(format string, v ...interface{}) {
 func Ctx(ctx context.Context) *zerolog.Logger {
 	return zerolog.Ctx(ctx)
 }
+
+/** BEGIN CUSTOM CODE */
+
+// ReplaceGlobal replaces the global logger and returns a function to retrieve the original logger.
+func ReplaceGlobal(logger zerolog.Logger) (func(), zerolog.Logger) {
+	mutex.Lock()
+	prev := Logger
+	Logger = logger
+	mutex.Unlock()
+	return func() { ReplaceGlobal(prev) }, logger
+}
+
+// GetLevel returns the current log level
+func GetLevel() zerolog.Level {
+	return Logger.GetLevel()
+}
+
+// IsDebugEnabled returns whether or not debug or trace logging is enabled.
+func IsDebugEnabled() bool {
+	return Logger.GetLevel() <= zerolog.DebugLevel
+}
+
+// SetLevel updates the minimum logging level for the logger.
+func SetLevel(level zerolog.Level) {
+	Logger.SetLevel(level)
+}
+
+// WouldLog returns whether or not a mesage with the given level would be logged.
+func WouldLog(level zerolog.Level) bool {
+	return Logger.WouldLog(level)
+}
+
+// InitLogrusInterceptor initializes the logrus global logger with an expected format so that they can be
+// intercepted and parsed by ParseLogrusMessages.
+func InterceptLogrusMessages(writer *io.PipeWriter) {
+	Logger.InterceptLogrusMessages(writer)
+}
+
+// ParseLogrusMessages uses a reader paired with the output writer from InitLogrusInterceptor to read messages
+// from the pipe in a blocking manner until the writer is closed.
+func ParseLogrusMessages(reader *io.PipeReader, handler zerolog.ParseLogrusMessageErrorHandler) {
+	Logger.ParseLogrusMessages(reader, handler)
+}
+
+// WithContext returns a copy of ctx with l associated. If an instance of Logger
+// is already in the context, the context is not updated.
+func WithContext(ctx context.Context) context.Context {
+	return Logger.WithContext(ctx)
+}
+
+/** END CUSTOM CODE */

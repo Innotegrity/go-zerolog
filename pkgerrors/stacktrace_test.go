@@ -1,3 +1,4 @@
+//go:build !binary_log
 // +build !binary_log
 
 package pkgerrors
@@ -9,7 +10,7 @@ import (
 	"testing"
 
 	"github.com/pkg/errors"
-	"github.com/rs/zerolog"
+	"go.innotegrity.dev/zerolog"
 )
 
 func TestLogStack(t *testing.T) {
@@ -22,7 +23,10 @@ func TestLogStack(t *testing.T) {
 	log.Log().Stack().Err(err).Msg("")
 
 	got := out.String()
-	want := `\{"stack":\[\{"func":"TestLogStack","line":"21","source":"stacktrace_test.go"\},.*\],"error":"from error: error message"\}\n`
+	//want := `\{"stack":\[\{"func":"TestLogStack","line":"21","source":"stacktrace_test.go"\},.*\],"error":"from error: error message"\}\n`
+	want := `\{"stack":\[\{"func":"TestLogStack","line":"22","source":"stacktrace_test.go"\},.*\],"error":"from error: error message"\}\n`
+	/** BEGIN CUSTOM CODE **/
+	/** END CUSTOM CODE **/
 	if ok, _ := regexp.MatchString(want, got); !ok {
 		t.Errorf("invalid log output:\ngot:  %v\nwant: %v", got, want)
 	}
@@ -38,7 +42,10 @@ func TestLogStackFromContext(t *testing.T) {
 	log.Log().Err(err).Msg("") // not explicitly calling Stack()
 
 	got := out.String()
-	want := `\{"stack":\[\{"func":"TestLogStackFromContext","line":"37","source":"stacktrace_test.go"\},.*\],"error":"from error: error message"\}\n`
+	/** BEGIN CUSTOM CODE **/
+	//want := `\{"stack":\[\{"func":"TestLogStackFromContext","line":"37","source":"stacktrace_test.go"\},.*\],"error":"from error: error message"\}\n`
+	want := `\{"stack":\[\{"func":"TestLogStackFromContext","line":"41","source":"stacktrace_test.go"\},.*\],"error":"from error: error message"\}\n`
+	/** END CUSTOM CODE **/
 	if ok, _ := regexp.MatchString(want, got); !ok {
 		t.Errorf("invalid log output:\ngot:  %v\nwant: %v", got, want)
 	}
