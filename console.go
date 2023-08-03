@@ -45,9 +45,18 @@ const (
 // Formatter transforms the input into a formatted string.
 type Formatter func(interface{}) string
 
+/** BEGIN CUSTOM CODE */
+
 // ConsoleWriter parses the JSON input and writes it in an
 // (optionally) colorized, human-friendly format to Out.
+//
+// Unlike using the global `zerolog.CallerFieldName` value to change the caller name for all log writers, you
+// can use the writer's `CallerFieldName` to change the name only for this writer.
+//
+// By default if a field name is not provided, the global field name will be used instead. When excluding fields
+// from the output, be sure to use the DEFAULT field name and NOT the customized field name.
 type ConsoleWriter struct {
+	/** END CUSTOM CODE */
 	// Out is the output destination.
 	Out io.Writer
 
@@ -76,6 +85,15 @@ type ConsoleWriter struct {
 	FormatErrFieldValue Formatter
 
 	FormatExtra func(map[string]interface{}, *bytes.Buffer) error
+
+	/** BEGIN CUSTOM CODE */
+	CallerFieldName     string
+	ErrorFieldName      string
+	ErrorStackFieldName string
+	LevelFieldName      string
+	MessageFieldName    string
+	TimestampFieldName  string
+	/** END CUSTOM CODE */
 }
 
 // NewConsoleWriter creates and initializes a new ConsoleWriter.
@@ -219,7 +237,38 @@ func (w ConsoleWriter) writeFields(evt map[string]interface{}, buf *bytes.Buffer
 			}
 		}
 
-		buf.WriteString(fn(field))
+		/** BEGIN CUSTOM CODE */
+		// output updated field name
+		fieldName := field
+		switch fieldName {
+		case CallerFieldName:
+			if w.CallerFieldName != "" {
+				fieldName = w.CallerFieldName
+			}
+		case ErrorFieldName:
+			if w.ErrorFieldName != "" {
+				fieldName = w.ErrorFieldName
+			}
+		case ErrorStackFieldName:
+			if w.ErrorStackFieldName != "" {
+				fieldName = w.ErrorStackFieldName
+			}
+		case LevelFieldName:
+			if w.LevelFieldName != "" {
+				fieldName = w.LevelFieldName
+			}
+		case MessageFieldName:
+			if w.MessageFieldName != "" {
+				fieldName = w.MessageFieldName
+			}
+		case TimestampFieldName:
+			if w.TimestampFieldName != "" {
+				fieldName = w.TimestampFieldName
+			}
+		}
+		//buf.WriteString(fn(field))
+		buf.WriteString(fn(fieldName))
+		/** END CUSTOM CODE */
 
 		switch fValue := evt[field].(type) {
 		case string:

@@ -8,6 +8,13 @@ and utilizes [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0
 
 No unreleased changes
 
+## v1.30.1 (Released 2023-08-03)
+
+### Notes
+
+* Added new `JSONWriter` and options for renaming fields for `ConsoleWriter`
+
+
 ## v1.30.0 (Released 2023-07-20)
 
 ### Notes

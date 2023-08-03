@@ -2,6 +2,7 @@ package zerolog_test
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -55,6 +56,19 @@ func ExampleNewConsoleWriter_customFormatters() {
 	log.Info().Str("foo", "bar").Msg("Hello World")
 	// Output: <nil> [INFO ] Hello World foo=bar
 }
+
+/** BEGIN CUSTOM CODE */
+func TestCustomErrorFieldName(t *testing.T) {
+	buf := &bytes.Buffer{}
+	log := zerolog.New(zerolog.ConsoleWriter{Out: buf, NoColor: true, ErrorFieldName: "@error"})
+	log.Error().Err(errors.New("some message")).Msgf("This is an error: %s", "some message")
+	want := `<nil> ERR This is an error: some message @error="some message"`
+	if got := strings.TrimSpace(buf.String()); got != want {
+		t.Errorf("\ngot:\n%s\nwant:\n%s", got, want)
+	}
+}
+
+/** END CUSTOM CODE */
 
 func TestConsoleLogger(t *testing.T) {
 	t.Run("Numbers", func(t *testing.T) {
